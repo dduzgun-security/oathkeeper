@@ -53,28 +53,32 @@ func NewJudgeHandler(r decisionHandlerRegistry) *DecisionHandler {
 
 func (h *DecisionHandler) ServeHTTP(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	if len(r.URL.Path) >= len(DecisionPath) && r.URL.Path[:len(DecisionPath)] == DecisionPath {
-		r.URL.Scheme = "http"
-		r.URL.Host = r.Host
-		r.URL.Path = r.URL.Path[len(DecisionPath):]
+		// r.URL.Scheme = "http"
+		// r.URL.Host = r.Host
+		// r.URL.Path = r.URL.Path[len(DecisionPath):]
 
-		if r.TLS != nil || strings.EqualFold(r.Header.Get("X-Forwarded-Proto"), "https") {
-			r.URL.Scheme = "https"
-		}
-		if len(r.Header.Get("X-Forwarded-Proto")) > 0 {
-			r.URL.Scheme = r.Header.Get("X-Forwarded-Proto")
-		}
+		// if r.TLS != nil || strings.EqualFold(r.Header.Get("X-Forwarded-Proto"), "https") {
+		// 	r.URL.Scheme = "https"
+		// }
+		// if len(r.Header.Get("X-Forwarded-Proto")) > 0 {
+		// 	r.URL.Scheme = r.Header.Get("X-Forwarded-Proto")
+		// }
 
-		if len(r.Header.Get("X-Forwarded-Method")) > 0 {
-			r.Method = r.Header.Get("X-Forwarded-Method")
-		}
+		// if len(r.Header.Get("X-Forwarded-Method")) > 0 {
+		// 	r.Method = r.Header.Get("X-Forwarded-Method")
+		// }
 
-		if len(r.Header.Get("X-Forwarded-Host")) > 0 {
-			r.URL.Host = r.Header.Get("X-Forwarded-Host")
-		}
+		// if len(r.Header.Get("X-Forwarded-Host")) > 0 {
+		// 	r.URL.Host = r.Header.Get("X-Forwarded-Host")
+		// }
 
-		if len(r.Header.Get("X-Forwarded-Uri")) > 0 {
-			r.URL.Path = r.Header.Get("X-Forwarded-Uri")
-		}
+		// if len(r.Header.Get("X-Forwarded-Uri")) > 0 {
+		// 	r.URL.Path = r.Header.Get("X-Forwarded-Uri")
+		// }
+		r.URL.Path = r.Header.Get("X-Forwarded-Uri")
+		r.URL.Scheme = r.Header.Get("X-Forwarded-Proto")
+		r.Method = r.Header.Get("X-Forwarded-Method")
+		r.URL.Host = r.Header.Get("X-Forwarded-Host")
 
 		h.decisions(w, r)
 	} else {
